@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Cinzel } from "next/font/google";
+import { Navbar } from "@/components/layout/Navbar";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -22,13 +23,29 @@ export const metadata: Metadata = {
   description: "Demon Slayer Corps ERP System",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+import { createClient } from "@/lib/supabase/server";
+
+export default async function RootLayout({ children }: any) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  let profile = null;
+  if (user) {
+    const { data } = await supabase.from("hunters").select("*").eq("user_id", user.id).single();
+    profile = data;
+  }
+
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${cinzel.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <Navbar user={user} profile={profile} />
+        <div className="flex-1">
+          {children}
+        </div>
+      </body>
     </html>
   );
 }

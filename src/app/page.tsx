@@ -1,59 +1,36 @@
-import { createClient } from "@/lib/supabase/server";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-export default async function Home() {
-  const supabase = await createClient();
-
-  // Fetch some basic stats for the dashboard
-  const { count: huntersCount } = await supabase
-    .from("hunters")
-    .select("*", { count: "exact", head: true });
-
-  const { count: activeMissionsCount } = await supabase
-    .from("missions")
-    .select("*", { count: "exact", head: true })
-    .eq("status", "Ongoing");
-
+export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-background text-foreground p-8">
-      <header className="mb-12 border-b border-border pb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-4xl font-heading text-primary drop-shadow-md">
-            Oyakata-sama's Dashboard
-          </h1>
-          <p className="text-muted-foreground mt-2">
-            Demon Slayer Corps Central ERP System
-          </p>
-        </div>
-        <div className="flex gap-4">
-          <Button variant="outline" className="border-secondary text-secondary hover:bg-secondary hover:text-white transition-colors">
-            Recruit Hunter
-          </Button>
-          <Button className="bg-primary text-white hover:brightness-110 transition-all">
-            Dispatch Mission
-          </Button>
-        </div>
-      </header>
+    <div className="min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center bg-background text-foreground relative overflow-hidden">
+      {/* Background Decorative Elements */}
+      <div className="absolute inset-0 z-0 opacity-10 pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-ds-green rounded-full blur-[100px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-ds-burgundy rounded-full blur-[100px]" />
+      </div>
 
-      <main className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-card text-card-foreground border border-border p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
-          <h2 className="text-xl font-heading mb-2 text-secondary">Total Hunters</h2>
-          <p className="text-5xl font-bold">{huntersCount ?? 0}</p>
-          <p className="text-sm text-muted-foreground mt-2">Active corps members</p>
-        </div>
+      <div className="z-10 text-center max-w-3xl px-4">
+        <h1 className="text-5xl md:text-7xl font-heading text-primary drop-shadow-lg mb-6">
+          Destroy Demons.<br/>Protect Humanity.
+        </h1>
+        <p className="text-lg md:text-xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed">
+          The Demon Slayer Corps is looking for brave individuals. Stand against the darkness, master your breathing, and become the sword that guards the night. 
+        </p>
 
-        <div className="bg-card text-card-foreground border border-border p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
-          <h2 className="text-xl font-heading mb-2 text-destructive">Active Missions</h2>
-          <p className="text-5xl font-bold">{activeMissionsCount ?? 0}</p>
-          <p className="text-sm text-muted-foreground mt-2">Hunters currently deployed</p>
+        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+          <Link href="/register">
+            <Button size="lg" className="h-14 px-8 text-lg bg-ds-water text-white hover:brightness-110 shadow-lg shadow-ds-water/20">
+              Register for Final Selection
+            </Button>
+          </Link>
+          <Link href="/login">
+            <Button size="lg" variant="outline" className="h-14 px-8 text-lg border-ds-green text-ds-green hover:bg-ds-green hover:text-white">
+              Corps Member Login
+            </Button>
+          </Link>
         </div>
-
-        <div className="bg-card text-card-foreground border border-border p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
-          <h2 className="text-xl font-heading mb-2 text-accent">Butterfly Estate</h2>
-          <p className="text-5xl font-bold">0</p>
-          <p className="text-sm text-muted-foreground mt-2">Hunters in recovery</p>
-        </div>
-      </main>
+      </div>
     </div>
   );
 }
